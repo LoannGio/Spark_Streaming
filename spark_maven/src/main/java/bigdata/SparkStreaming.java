@@ -26,11 +26,11 @@ public class SparkStreaming {
 		Configuration twitterConf = ConfigurationContext.getInstance();
 		Authorization twitterAuth = AuthorizationFactory.getInstance(twitterConf);
 		
-		String[] filters = { "#Android" };
+		String[] filters = { "#testSparkStreaming" };
 		TwitterUtils.createStream(sc, twitterAuth, filters)
-		        .flatMap(s -> Arrays.asList(s.getHashtagEntities()))
+		        .flatMap(s -> Arrays.stream(s.getHashtagEntities()).iterator())
 		        .map(h -> h.getText().toLowerCase())
-		        .filter(h -> !h.equals("android"))
+		        .filter(h -> !h.equals("testsparkstreaming"))
 		        .countByValue()
 		        .print();
 		sc.start();

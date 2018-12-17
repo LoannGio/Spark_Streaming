@@ -30,7 +30,7 @@ public class SparkStreaming {
 		
 		String[] filters = { "#Android" };
 		TwitterUtils.createStream(sc, twitterAuth, filters)
-        .flatMap(s -> Arrays.asList(s.getHashtagEntities()))
+        .flatMap(s -> Arrays.stream(s.getHashtagEntities()).iterator())
         .map(h -> h.getText().toLowerCase())
         .filter(h -> !h.equals("android"))
         .countByValue()

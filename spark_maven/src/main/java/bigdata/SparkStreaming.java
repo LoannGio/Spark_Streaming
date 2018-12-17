@@ -6,9 +6,12 @@ import org.apache.spark.*;
 import org.apache.spark.streaming.*;
 import org.apache.spark.streaming.api.java.*;
 import org.apache.spark.streaming.twitter.TwitterUtils;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
 import twitter4j.auth.Authorization;
 import twitter4j.auth.AuthorizationFactory;
 import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.conf.ConfigurationContext;
 
 public class SparkStreaming {
@@ -25,7 +28,7 @@ public class SparkStreaming {
 		
 		String[] filters = { "#Android" };
 		TwitterUtils.createStream(sc, twitterAuth, filters)
-		        .flatMap(s -> Arrays.stream(s.getHashtagEntities()).iterator())
+		        .flatMap(s -> Arrays.asList(s.getHashtagEntities()))
 		        .map(h -> h.getText().toLowerCase())
 		        .filter(h -> !h.equals("android"))
 		        .countByValue()

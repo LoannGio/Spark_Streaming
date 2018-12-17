@@ -1,16 +1,11 @@
 package bigdata;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.spark.*;
-import org.apache.spark.api.java.function.*;
 import org.apache.spark.streaming.*;
 import org.apache.spark.streaming.api.java.*;
 import org.apache.spark.streaming.twitter.TwitterUtils;
-
-import twitter4j.HashtagEntity;
-import twitter4j.Status;
 import twitter4j.auth.Authorization;
 import twitter4j.auth.AuthorizationFactory;
 import twitter4j.conf.Configuration;
@@ -30,11 +25,11 @@ public class SparkStreaming {
 		
 		String[] filters = { "#Android" };
 		TwitterUtils.createStream(sc, twitterAuth, filters)
-        .flatMap(s -> Arrays.asList(s.getHashtagEntities()))
-        .map(h -> h.getText().toLowerCase())
-        .filter(h -> !h.equals("android"))
-        .countByValue()
-        .print();
+		        .flatMap(s -> Arrays.stream(s.getHashtagEntities()).iterator())
+		        .map(h -> h.getText().toLowerCase())
+		        .filter(h -> !h.equals("android"))
+		        .countByValue()
+		        .print();
 		
 		sc.start();
 		sc.awaitTermination();
